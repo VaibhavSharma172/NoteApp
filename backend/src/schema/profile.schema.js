@@ -1,12 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-const userSchema = new Schema({
+const profileSchema = new Schema({
   username: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String },
   age: { type: Number },
   address: { type: String },
   contact : {type :Number },
 });
 
-const User = mongoose.model("newUser", userSchema);
-export default User;
+const Profile = mongoose.model("newUser", profileSchema);
+export default Profile;
