@@ -6,7 +6,7 @@ function CreateNote({ onClose, onNoteAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:8000/api/addNote", {
+    await fetch("http://localhost:3000/note/addNote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, desc }),
@@ -27,7 +27,7 @@ function CreateNote({ onClose, onNoteAdded }) {
           ✕
         </button>
 
-        <h2 className="text-xl font-bold mb-4">Create Note</h2>
+        <h2 className="text-xl text-black font-bold mb-4">Create Note</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -35,13 +35,13 @@ function CreateNote({ onClose, onNoteAdded }) {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-700 text-black p-2 rounded"
           />
           <textarea
             placeholder="Description"
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            className="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-700 text-black p-2 rounded"
           />
           <button
             type="submit"

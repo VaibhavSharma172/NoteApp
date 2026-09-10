@@ -1,22 +1,35 @@
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import { Routes, Route } from 'react-router-dom'
-import Home from './Home'
-import Createnote from './Createnote'
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Hero from "./components/Hero.jsx";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
+
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main>
-        <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/create" element={<Createnote />} />
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/main"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        {/* optional catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      </main>
-      <Footer />
     </div>
-  )
+  );
 }
 
 export default App

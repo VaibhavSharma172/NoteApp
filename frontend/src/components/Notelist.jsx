@@ -1,6 +1,6 @@
 function NoteList({ notes, onDelete, onUpdate }) {
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:8000/api/notes/${id}`, {
+    await fetch(`http://localhost:3000/api/notes/${id}`, {
       method: "DELETE",
     });
     onDelete();

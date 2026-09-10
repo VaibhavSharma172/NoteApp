@@ -1,25 +1,36 @@
-import React from 'react'
+import { useState } from "react";
+import CreateNote from "../components/Createnote.jsx";
 
 function Navbar() {
+  const [showCreate, setShowCreate] = useState(false);
+
   return (
     <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-md">
       <div className="text-2xl font-bold tracking-wide">
         NoteApp
       </div>
       <div className="flex space-x-6">
-        <a
+        {/* <a
           href="/"
           className="hover:text-blue-400 transition-colors"
         >
           Home
-        </a>
-        <a
-          href="/create"
+        </a> */}
+        <button
+          onClick={() => setShowCreate(true)}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"
         >
           Create
-        </a>
+        </button>
       </div>
+      {showCreate && (
+        <CreateNote
+          onClose={() => setShowCreate(false)}
+          onNoteAdded={() => {
+            // refresh note
+          }}
+        />
+      )}
     </nav>
   )
 }

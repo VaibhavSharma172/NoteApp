@@ -7,12 +7,14 @@ import noteRoutes from "./routes/notes.routes.js";
 import morgan from 'morgan';
 import multer from 'multer';
 import dns from "node:dns/promises";
+import cors from "cors"
 dns.setServers(["1.1.1.1"]);
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoute);
 app.use("/note", noteRoutes);
