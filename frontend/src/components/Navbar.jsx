@@ -1,7 +1,11 @@
 import { useState } from "react";
 import CreateNote from "../components/Createnote.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Navbar() {
+
+  const navigate = useNavigate();
+  const currentUser = {id:""};
   const [showCreate, setShowCreate] = useState(false);
 
   return (
@@ -10,12 +14,13 @@ function Navbar() {
         NoteApp
       </div>
       <div className="flex space-x-6">
-        {/* <a
-          href="/"
-          className="hover:text-blue-400 transition-colors"
+        <button
+          // onClick={() => navigate(`/profile/${currentUser.id}`)}
+          onClick={() => navigate("/profile")}
+          className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700 transition-colors"
         >
-          Home
-        </a> */}
+          My Profile
+        </button>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition-colors"

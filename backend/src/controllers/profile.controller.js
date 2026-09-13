@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import Profile from "../schema/profile.schema.js";
 import uploadFile from "../services/storage.js";
 //CRUD profle
@@ -6,19 +7,26 @@ export const createProfile = async (req, res) => {
   try {
     const { username, age, address, contact } = req.body;
     const file = req.file;
-    if(!file){
-      return res.status(400).json({message:"image required"});
+    console.log("req.user:", req.user);
+    const userId = req.user._id;
+    const existingProfile = await Profile.findOne({ user: userId });
+    if (existingProfile) {
+      return res.status(400).json({ message: "Profile already exists" });
     }
-console.log("reg", createProfile);
+    if (!file) {
+      return res.status(400).json({ message: "image required" });
+    }
+    console.log("reg", createProfile);
     const uploaded = await uploadFile(file.buffer, file.originalname);
-    const makeProfile =  new Profile({
+    const makeProfile = new Profile({
+      user: userId,
       username,
       image: uploaded.url,
       age,
       address,
       contact,
     });
-    await makeProfile.save()
+    await makeProfile.save();
     res
       .status(201)
       .json({ message: "Profile created successfully", makeProfile });
@@ -27,22 +35,31 @@ console.log("reg", createProfile);
   }
 };
 
-export const getProfile = async (req,res)=> {
-    try {
-const data = await Profile.find()
-if(!data) {
-      res.status(401).json({ message: "No data" });
-}
-res.status(201).json({message :"data fetched"})
-    } catch(err){
-res.status(500).json({message :"couldn't fetch"})
-    }
-}
+export const getProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-export const editProfile = async (req,res)=> {
-    try {
-const {id} = req.params;
-const { username, age, address, contact } = req.body;
+    const profile = await Profile.findOne({ user: userId });
+
+    if (!profile) {
+      return res.status(404).json({
+        message: "Profile not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Profile fetched successfully",
+      profile,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "couldn't fetch", error: err.message });
+  }
+};
+
+export const editProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { username, age, address, contact } = req.body;
     const file = req.file;
     const profile = await Profile.findById(id);
     if (!profile) {
@@ -61,9 +78,9 @@ const { username, age, address, contact } = req.body;
     await profile.save();
 
     res.status(200).json({ message: "Profile updated successfully", profile });
-    } catch(err){
-res.status(500).json({ error: err.message });
-    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const deleteProfile = async (req, res) => {

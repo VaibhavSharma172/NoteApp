@@ -1,9 +1,9 @@
-function NoteOpen() {
-  return (
-    <div>
-      <h3>{note.title}</h3>
-      <p>{note.desc}</p>
-      <div>
+function NoteOpen({ note, onEdit, onDelete, onClose }) {
+ return (
+    <div className="bg-white rounded-lg p-6 w-full max-w-3xl h-[80vh] overflow-y-auto">
+      <h3 className="text-2xl font-bold mb-4">{note.title}</h3>
+      <p className="text-gray-700 mb-6">{note.desc}</p>
+      <div className="flex space-x-2">
         <button
           onClick={() => onEdit(note)}
           className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
@@ -16,9 +16,15 @@ function NoteOpen() {
         >
           Delete
         </button>
+        <button
+          onClick={onClose}
+          className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition"
+        >
+          Close
+        </button>
       </div>
     </div>
   );
 }
 
-export default NoteOpen
+export default NoteOpen;

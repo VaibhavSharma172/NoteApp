@@ -9,7 +9,7 @@ const imagekit = new ImageKit({
 
 const uploadFile = async (fileBuffer, fileName)=> {
 const uploadResponse = await imagekit.files.upload({
-    file: fileBuffer.tostring("base64"),
+    file: fileBuffer.toString("base64"),
     fileName : fileName,
 })
 return uploadResponse;

@@ -1,6 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 
 const profileSchema = new Schema({
+  user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "userVerification",
+    required: true,
+  },
   username: { type: String, required: true },
   image: { type: String },
   age: { type: Number },
