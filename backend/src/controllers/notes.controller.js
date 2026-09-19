@@ -2,7 +2,7 @@ import Note from "../schema/notes.schema.js";
 
 export const getNotes = async (req, res) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find({user:req.user._id});
     if (!notes) {
       res.status(401).json({ message: "No data" });
     }
@@ -28,7 +28,7 @@ export const getNoteById = async (req, res) => {
 export const addNote = async (req, res) => {
   try {
     const { title, desc } = req.body;
-    const newNote = await Note.create({ title, desc });
+    const newNote = await Note.create({ user:req.user._id, title, desc });
     res.status(201).json({ message: "Note created successfully", newNote });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -52,11 +52,13 @@ export const patchNote = async (req, res) => {
 
 export const deleteNote = async (req, res) => {
   try {
-    const deletedNote = await Note.findOneAndDelete({ _id: req.params.id });
+    const deletedNote = await Note.findByIdAndDelete({ _id: req.params.id,
+      user: req.user._id,
+     });
     if (!deletedNote)
       return res.status(404).json({ message: "Note not found" });
     res.json({ message: "Note deleted successfully" });
-  } catch {
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };

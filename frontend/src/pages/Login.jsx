@@ -10,16 +10,43 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/auth/login", {
-        email,
-        password,
-      });
-      localStorage.setItem("token", res.data.token); // store JWT
-      navigate("/main"); // redirect to main
+      // const res = join below line if problem
+      await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      try {
+        await axios.get("http://localhost:3000/profile/get", {
+          withCredentials: true,
+        });
+        // if Profile exists
+        navigate("/main");
+      } catch (profileError) {
+        if (profileError.response?.status === 404) {
+          // user authenticated but no created
+          navigate("/create-profile");
+        } else {
+          throw profileError;
+        }
+      }
     } catch (err) {
-      alert("Login failed");
+      console.error("Login error:", err);
+      alert(err.response?.data?.message || "Login failed");
     }
   };
+  //   localStorage.setItem("token", res.data.token); // store JWT
+  //   navigate("/main"); // redirect to main
+  // } catch (err) {
+  //   alert("Login failed");
+  // }
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-600">
@@ -29,7 +56,6 @@ function Login() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
           <div>
             <input
               type="email"
@@ -39,7 +65,6 @@ function Login() {
               className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
             />
           </div>
-          {/* Password */}
           <div>
             <input
               type="password"
@@ -49,8 +74,6 @@ function Login() {
               className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
             />
           </div>
-
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
@@ -58,6 +81,7 @@ function Login() {
             Login
           </button>
         </form>
+                <p className="text-md ">Not registered ? <button onClick={()=>navigate("/register")} className="text-blue-500 text-center">Register</button></p>
       </div>
     </div>
   );

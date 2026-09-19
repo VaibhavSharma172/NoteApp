@@ -5,6 +5,7 @@ import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
 import Profile from "./pages/Profile.jsx";
+import CreateProfile from "./pages/CreateProfile.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Hero />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/create-profile" element={<CreateProfile />} />
         <Route path="/profile" element={<Profile />} />
         <Route
           path="/main"
@@ -27,11 +29,11 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* optional catch-all */}
+        {/* optional anything else */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
 }
 
-export default App
+export default App;

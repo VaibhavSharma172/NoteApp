@@ -1,24 +1,40 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    const existingUser = JSON.parse(localStorage.getItem(data.email));
-    if (existingUser) {
-      console.log("Email is already registered!");
-    } else {
-      const userData = {
-        email: data.email,
-        password: data.password,
-      };
-      localStorage.setItem(data.email, JSON.stringify(userData));
-      console.log(data.name + " has been successfully registered");
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(result.message);
+        console.log("response", result.message);
+        return;
+      }
+
+      alert(result.message);
+      console.log("User registered:", result.register);
+
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Something went wrong. Please try again.")
     }
   };
 
@@ -30,7 +46,6 @@ function Register() {
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
           {/* Email */}
           <div>
             <input
@@ -67,9 +82,23 @@ function Register() {
             Register
           </button>
         </form>
+        <p className="text-md ">Already a user ? <button onClick={()=>navigate("/login")} className="text-blue-500 text-center">Sign in</button></p>
       </div>
     </div>
   );
 }
 
 export default Register;
+
+//   const existingUser = JSON.parse(localStorage.getItem(data.email));
+//   if (existingUser) {
+//     console.log("Email is already registered!");
+//   } else {
+//     const userData = {
+//       email: data.email,
+//       password: data.password,
+//     };
+//     localStorage.setItem(data.email, JSON.stringify(userData));
+//     console.log(data.email + " has been successfully registered");
+//   }
+// };

@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import NoteTile from "../components/NoteTile.jsx";
 import NoteOpen from "../components/noteOpen.jsx";
+import axios from "axios";
 
 function Home() {
   const [notes, setNotes] = useState([]);
@@ -10,9 +11,11 @@ function Home() {
   const [selectNote, setSelectNote] = useState(null);
 
   const fetchNotes = async () => {
-    const res = await fetch("http://localhost:3000/note/getNotes");
-    const data = await res.json();
-    setNotes(data.notes || []);
+    const res = await axios.get("http://localhost:3000/note/getNotes",{
+      withCredentials:true
+    });
+    // const data = await res.json();
+    setNotes(res.data.notes || []);
   };
   useEffect(() => {
     fetchNotes();
@@ -20,15 +23,28 @@ function Home() {
 
   const handleEdit = (note) => {
     console.log("Edit note:", note);
-    // edit here
+    // edit code here
   };
 
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:3000/notes/${id}`, {
-      method: "DELETE",
+  try {
+    await axios.delete(`http://localhost:3000/note/notes/${id}`, {
+      withCredentials: true,
     });
-    fetchNotes(); // refresh after delete
-  };
+    setNotes((prevNotes) =>
+      prevNotes.filter((note) => note._id !== id)
+    );
+  } catch (error) {
+    console.error("Delete failed:", error.response?.data || error.message);
+  }
+};
+
+  // const handleDelete = async (id) => {
+  //   await axios.delete(`http://localhost:3000/note/${id}`, {
+  //     withCredentials: true
+  //   });
+  //   fetchNotes(); // refresh after delete - doesnt work ? test 
+  // };
 
   const openNote = (note) => {
     setSelectNote(note);

@@ -1,6 +1,6 @@
-import { error } from "node:console";
 import Profile from "../schema/profile.schema.js";
 import uploadFile from "../services/storage.js";
+import mongoose from "mongoose";
 //CRUD profle
 
 export const createProfile = async (req, res) => {
@@ -19,7 +19,7 @@ export const createProfile = async (req, res) => {
     console.log("reg", createProfile);
     const uploaded = await uploadFile(file.buffer, file.originalname);
     const makeProfile = new Profile({
-      user: userId,
+      user: req.user._id,
       username,
       image: uploaded.url,
       age,
@@ -37,9 +37,17 @@ export const createProfile = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    const userId = req.user.id;
+    console.log("REQ.USER:", req.user);
+
+    // const userId = req.user._id; keep commented
+
+    const userId = mongoose.Types.ObjectId.isValid(req.user._id)
+      ? new mongoose.Types.ObjectId(req.user._id)
+      : req.user._id;
+    console.log("USER ID:", userId);
 
     const profile = await Profile.findOne({ user: userId });
+    console.log("PROFILE:", profile);
 
     if (!profile) {
       return res.status(404).json({

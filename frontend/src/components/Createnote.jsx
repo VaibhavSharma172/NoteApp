@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 function CreateNote({ onClose, onNoteAdded }) {
@@ -6,11 +7,13 @@ function CreateNote({ onClose, onNoteAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:3000/note/addNote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, desc }),
-    });
+    await axios.post("http://localhost:3000/note/addNote", {
+      title,
+      desc},
+      {
+        withCredentials:true,
+      }
+    );
     setTitle("");
     setDesc("");
     onNoteAdded();
