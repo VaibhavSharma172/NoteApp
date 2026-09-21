@@ -40,20 +40,22 @@ function Profile() {
     return <div>Profile not found</div>;
   }
   return (
-    <div>
-      <h1>Profile</h1>
-      <div className="border border-solid border-black rounded p-4">
-        <div>
+    <div className="relative border border-black">
+      <div className="bg-purple-700 h-[40vh]">top</div>
+      <div className="bg-pink-300 h-[60vh]">bottom</div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-3/4 shadow-lg rounded">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-7/4">
           <img
             src={profile.image}
             alt="Profile"
-            className="w-32 h-32 object-cover rounded-full"
+            className="w-48 h-48 object-cover rounded-full"
           />
-          <p>
-            <strong>Name:</strong> {profile.username}
-          </p>
         </div>
         <div>
+          {/* name address age contact */}
+           <p>
+            <strong>Name:</strong> {profile.username}
+          </p>
           <p>
             <strong>Age:</strong> {profile.age}
           </p>
@@ -64,9 +66,28 @@ function Profile() {
             <strong>Contact:</strong> {profile.contact}
           </p>
         </div>
-      </div>
+    </div>
     </div>
   );
 }
 
 export default Profile;
+
+{/* 
+      <div className="border border-solid border-black rounded p-4">
+        <div>
+        <div>
+          <p>
+            <strong>Name:</strong> {profile.username}
+          </p>
+          <p>
+            <strong>Age:</strong> {profile.age}
+          </p>
+          <p>
+            <strong>Address:</strong> {profile.address}
+          </p>
+          <p>
+            <strong>Contact:</strong> {profile.contact}
+          </p>
+        </div>
+      </div> */}

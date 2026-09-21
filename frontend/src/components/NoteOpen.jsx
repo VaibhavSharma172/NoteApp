@@ -17,7 +17,9 @@ function NoteOpen({ note, onEdit, onDelete, onClose }) {
           Delete
         </button>
         <button
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(note._id);}}
           className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition"
         >
           Close

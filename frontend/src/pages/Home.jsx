@@ -34,6 +34,10 @@ function Home() {
     setNotes((prevNotes) =>
       prevNotes.filter((note) => note._id !== id)
     );
+    if (selectNote?._id === id){
+      setOpen(false)
+      setSelectNote(null)
+    }
   } catch (error) {
     console.error("Delete failed:", error.response?.data || error.message);
   }

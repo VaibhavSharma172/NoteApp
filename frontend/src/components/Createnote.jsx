@@ -7,6 +7,7 @@ function CreateNote({ onClose, onNoteAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
     await axios.post("http://localhost:3000/note/addNote", {
       title,
       desc},
@@ -18,6 +19,9 @@ function CreateNote({ onClose, onNoteAdded }) {
     setDesc("");
     onNoteAdded();
     onClose();
+  } catch (error){
+    console.error("Error creating note:", error);
+  }
   };
 
   return (
