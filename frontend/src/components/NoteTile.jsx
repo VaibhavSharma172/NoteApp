@@ -12,7 +12,7 @@ function NoteTile({note, onEdit, onDelete, onClick}) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onEdit(note);}}
+            onClick();}}
           className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
         >
           Edit

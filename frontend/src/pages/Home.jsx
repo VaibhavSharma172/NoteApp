@@ -4,6 +4,7 @@ import Footer from "../components/Footer.jsx";
 import NoteTile from "../components/NoteTile.jsx";
 import NoteOpen from "../components/noteOpen.jsx";
 import axios from "axios";
+import AxiosInstance from "../context/AxiosInstance.js";
 
 function Home() {
   const [notes, setNotes] = useState([]);
@@ -11,9 +12,10 @@ function Home() {
   const [selectNote, setSelectNote] = useState(null);
 
   const fetchNotes = async () => {
-    const res = await axios.get("http://localhost:3000/note/getNotes",{
-      withCredentials:true
-    });
+    // const res = await axios.get("http://localhost:3000/note/getNotes",{
+    //   withCredentials:true
+    // });
+    const res = await AxiosInstance.get("note/getNotes")
     // const data = await res.json();
     setNotes(res.data.notes || []);
   };
@@ -21,9 +23,31 @@ function Home() {
     fetchNotes();
   }, []);
 
-  const handleEdit = (note) => {
-    console.log("Edit note:", note);
-    // edit code here
+  const handleEdit = async (id, updatedFields) => {
+    try{
+const res = await AxiosInstance.patch(
+         `note/notes/:id`,
+       updatedFields,
+      // { withCredentials: true }
+      );
+     const updatedFields = res.data;
+
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+        note._id === id ? {...note, updatedNote} : note));
+      if (selectNote?._id === id) {
+        setSelectNote((prev) =>({...prev,...updatedNote}));
+      }
+      if (selectNote?._id === id) {
+      setSelectNote((prev) => ({
+        ...prev,
+        ...updatedNote,
+      }));
+    }
+    } catch(error) {
+      console.error("edit failed:", error.response?.data || error.message);
+    throw error;
+    } 
   };
 
   const handleDelete = async (id) => {
@@ -81,13 +105,20 @@ function Home() {
 
       <Footer />
       {open && selectNote && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+        onClick={() => {
+      setOpen(false);
+      setSelectNote(null);}}>
+          <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative"
+          onClick={(e) => e.stopPropagation()}>
             <NoteOpen
               note={selectNote}
               onEdit={handleEdit}
               onDelete={handleDelete}
-              onClose={() => setOpen(false)}
+              onClose={() => {
+  setOpen(false);
+  setSelectNote(null);
+}}
             />
           </div>
         </div>
@@ -98,12 +129,4 @@ function Home() {
 
 export default Home;
 
-// {open && selectNote ? (
-//           <NoteOpen
-//           note={selectNote}
-//             onEdit={handleEdit}
-//             onDelete={handleDelete}
-//             onClose={() => setOpen(false)}
-//             onClick={() => openNote(note)}
-//           />
-//       ) :
+
