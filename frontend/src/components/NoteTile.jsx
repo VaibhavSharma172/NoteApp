@@ -9,10 +9,10 @@ function NoteTile({note, onEdit, onDelete, onClick}) {
         {note.desc}
       </p>
       <div className="flex justify-end space-x-2">
-        <button
+        <button type="button"
           onClick={(e) => {
             e.stopPropagation();
-            onClick();}}
+            onEdit();}}
           className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
         >
           Edit

@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
+import CreateNote from "../components/Createnote.jsx";
 import NoteTile from "../components/NoteTile.jsx";
-import NoteOpen from "../components/noteOpen.jsx";
+import NoteOpen from "../components/NoteOpen.jsx";
 import axios from "axios";
 import AxiosInstance from "../context/AxiosInstance.js";
 
 function Home() {
   const [notes, setNotes] = useState([]);
   const [open, setOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [selectNote, setSelectNote] = useState(null);
 
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    
   const fetchNotes = async () => {
-    // const res = await axios.get("http://localhost:3000/note/getNotes",{
-    //   withCredentials:true
-    // });
     const res = await AxiosInstance.get("note/getNotes")
-    // const data = await res.json();
     setNotes(res.data.notes || []);
   };
   useEffect(() => {
@@ -26,7 +26,7 @@ function Home() {
   const handleEdit = async (id, updatedFields) => {
     try{
 const res = await AxiosInstance.patch(
-         `note/notes/:id`,
+         `note/notes/${id}`,
        updatedFields,
       // { withCredentials: true }
       );
@@ -38,12 +38,6 @@ const res = await AxiosInstance.patch(
       if (selectNote?._id === id) {
         setSelectNote((prev) =>({...prev,...updatedNote}));
       }
-      if (selectNote?._id === id) {
-      setSelectNote((prev) => ({
-        ...prev,
-        ...updatedNote,
-      }));
-    }
     } catch(error) {
       console.error("edit failed:", error.response?.data || error.message);
     throw error;
@@ -66,13 +60,6 @@ const res = await AxiosInstance.patch(
     console.error("Delete failed:", error.response?.data || error.message);
   }
 };
-
-  // const handleDelete = async (id) => {
-  //   await axios.delete(`http://localhost:3000/note/${id}`, {
-  //     withCredentials: true
-  //   });
-  //   fetchNotes(); // refresh after delete - doesnt work ? test 
-  // };
 
   const openNote = (note) => {
     setSelectNote(note);

@@ -9,7 +9,6 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
       // const res = join below line if problem
       await axios.post(
         "http://localhost:3000/auth/login",
@@ -21,33 +20,10 @@ function Login() {
           withCredentials: true,
         },
       );
+      navigate("/main");
 
-      try {
-        await axios.get("http://localhost:3000/profile/get", {
-          withCredentials: true,
-        });
-        // if Profile exists
-        navigate("/main");
-      } catch (profileError) {
-        if (profileError.response?.status === 404) {
-          // user authenticated but no created
-          navigate("/create-profile");
-        } else {
-          throw profileError;
-        }
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      alert(err.response?.data?.message || "Login failed");
-    }
-  };
-  //   localStorage.setItem("token", res.data.token); // store JWT
-  //   navigate("/main"); // redirect to main
-  // } catch (err) {
-  //   alert("Login failed");
-  // }
-  // };
 
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-600">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
